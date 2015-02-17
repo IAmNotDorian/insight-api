@@ -56,7 +56,6 @@
   },
   "dependencies": {
     "async": "*",
-    "//": "base58-native: 0.1.2",
     "base58-native": "*", 
     "bignum": "*",
     "bitauth": "^0.1.1",
