@@ -3,6 +3,7 @@
 var path = require('path');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
+var nconf = require('nconf');
 
 var rootPath = path.normalize(__dirname + '/..'),
   env,
@@ -13,15 +14,16 @@ var rootPath = path.normalize(__dirname + '/..'),
 
 var packageStr = fs.readFileSync(rootPath + '/package.json');
 var version = JSON.parse(packageStr).version;
-
+var nconf.use('file',{file:rootPath+'/config.json'});
+nconf.load();
 
 function getUserHome() {
   return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 }
 
-var home = process.env.INSIGHT_DB || (getUserHome() + '/.insight');
+var home = nconf.get('INSIGHT_DB') || (getUserHome() + '/.insight');
 
-if (process.env.INSIGHT_NETWORK === 'livenet') {
+if (nconf.get('INSIGHT_NETWORK') === 'livenet') {
   env = 'livenet';
   db = home;
   port = '3000';
@@ -34,7 +36,7 @@ if (process.env.INSIGHT_NETWORK === 'livenet') {
   b_port = '18332';
   p2p_port = '18333';
 }
-port = parseInt(process.env.INSIGHT_PORT) || port;
+port = parseInt(nconf.get('INSIGHT_PORT')) || port;
 
 
 switch (process.env.NODE_ENV) {
@@ -49,9 +51,9 @@ switch (process.env.NODE_ENV) {
     break;
 }
 
-var network = process.env.INSIGHT_NETWORK || 'testnet';
+var network = nconf.get('INSIGHT_NETWORK') || 'testnet';
 
-var dataDir = process.env.BITCOIND_DATADIR;
+var dataDir = nconf.get('BITCOIND_DATADIR');
 var isWin = /^win/.test(process.platform);
 var isMac = /^darwin/.test(process.platform);
 var isLinux = /^linux/.test(process.platform);
@@ -62,33 +64,33 @@ if (!dataDir) {
 }
 dataDir += network === 'testnet' ? 'testnet3' : '';
 
-var safeConfirmations = process.env.INSIGHT_SAFE_CONFIRMATIONS || 6;
-var ignoreCache = process.env.INSIGHT_IGNORE_CACHE || 0;
+var safeConfirmations = nconf.get('INSIGHT_SAFE_CONFIRMATIONS') || 6;
+var ignoreCache = nconf.get('INSIGHT_IGNORE_CACHE') || 0;
 
 
 var bitcoindConf = {
   protocol: process.env.BITCOIND_PROTO || 'http',
-  user: process.env.BITCOIND_USER || 'user',
-  pass: process.env.BITCOIND_PASS || 'pass',
-  host: process.env.BITCOIND_HOST || '127.0.0.1',
-  port: process.env.BITCOIND_PORT || b_port,
-  p2pPort: process.env.BITCOIND_P2P_PORT || p2p_port,
-  p2pHost: process.env.BITCOIND_P2P_HOST || process.env.BITCOIND_HOST || '127.0.0.1',
+  user: nconf.get('BITCOIND_USER') || 'user',
+  pass: nconf.get('BITCOIND_PASS') || 'pass',
+  host: nconf.get('BITCOIND_HOST') || '127.0.0.1',
+  port: nconf.get('BITCOIND_PORT') || b_port,
+  p2pPort: nconf.get('BITCOIND_P2P_PORT') || p2p_port,
+  p2pHost: nconf.get('BITCOIND_P2P_HOST') || nconf.get('BITCOIND_HOST') || '127.0.0.1',
   dataDir: dataDir,
   // DO NOT CHANGE THIS!
   disableAgent: true
 };
 
-var enableMonitor = process.env.ENABLE_MONITOR === 'true';
-var enableCleaner = process.env.ENABLE_CLEANER === 'true';
-var enableMailbox = process.env.ENABLE_MAILBOX === 'true';
-var enableRatelimiter = process.env.ENABLE_RATELIMITER === 'true';
+var enableMonitor = nconf.get('ENABLE_MONITOR') === 'true';
+var enableCleaner = nconf.get('ENABLE_CLEANER') === 'true';
+var enableMailbox = nconf.get('ENABLE_MAILBOX') === 'true';
+var enableRatelimiter = nconf.get('ENABLE_RATELIMITER') === 'true';
 var enableCredentialstore = process.env.ENABLE_CREDSTORE === 'true';
-var enableEmailstore = process.env.ENABLE_EMAILSTORE === 'true';
+var enableEmailstore = nconf.get('ENABLE_EMAILSTORE') === 'true';
 var enablePublicInfo = process.env.ENABLE_PUBLICINFO === 'true';
-var loggerLevel = process.env.LOGGER_LEVEL || 'info';
-var enableHTTPS = process.env.ENABLE_HTTPS === 'true';
-var enableCurrencyRates = process.env.ENABLE_CURRENCYRATES === 'true';
+var loggerLevel = nconf.get('LOGGER_LEVEL') || 'info';
+var enableHTTPS = nconf.get('ENABLE_HTTPS') === 'true';
+var enableCurrencyRates = nconf.get('ENABLE_CURRENCYRATES') === 'true';
 
 if (!fs.existsSync(db)) {
   mkdirp.sync(db);
@@ -115,7 +117,7 @@ module.exports = {
   enableHTTPS: enableHTTPS,
   version: version,
   root: rootPath,
-  publicPath: process.env.INSIGHT_PUBLIC_PATH || false,
+  publicPath: nconf.get('INSIGHT_PUBLIC_PATH') || false,
   appName: 'Insight ' + env,
   apiPrefix: '/api',
   port: port,
