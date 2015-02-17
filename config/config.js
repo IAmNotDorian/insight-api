@@ -14,7 +14,7 @@ var rootPath = path.normalize(__dirname + '/..'),
 
 var packageStr = fs.readFileSync(rootPath + '/package.json');
 var version = JSON.parse(packageStr).version;
-var nconf.use('file',{file:rootPath+'/config.json'});
+nconf.use('file',{file:rootPath+'/config.json'});
 nconf.load();
 
 function getUserHome() {
