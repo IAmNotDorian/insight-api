@@ -1,4 +1,8 @@
-# *insight API*
+# *insight API (Windows 8.1)*
+
+Fork of insight-api for use in windows 8.1
+
+## *insight API*
 
 *insight API* is an open-source bitcoin blockchain REST
 and websocket API. Insight API runs in NodeJS and uses LevelDB for storage. 
