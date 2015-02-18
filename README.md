@@ -1,6 +1,6 @@
 # *insight API (Windows 8.1)*
 
-Fork of insight-api for use in windows 8.1
+Fork of insight-api for use in Windows 8.1
 
 ## *insight API*
 
