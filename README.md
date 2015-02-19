@@ -4,6 +4,8 @@ Fork of insight-api for use in Windows 8.1.
 
 Note that configuration settings have been moved from environment variables to config.json.
 
+In the unlikely event of a donation: 1LrqUa5maiA3CaazmAXss6CNPvRMmiJaAs
+
 ## *insight API*
 
 *insight API* is an open-source bitcoin blockchain REST
